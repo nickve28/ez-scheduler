@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const { findFiles } = require('./file_browser');
+const { findDirectoryConfig, findAccounts } = require('./file_browser');
 
 function createWindow () {
   // Create the browser window.
@@ -12,25 +12,29 @@ function createWindow () {
       nodeIntegration: true,
       preload: path.join(__dirname, 'preload.js')
     }
-  })
+  });
 
   //load the index.html from a url
   win.loadURL('http://localhost:3000');
 
   // Open the DevTools.
-  win.webContents.openDevTools()
+  win.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
 
   ipcMain.handle('read-directory-config', () => {
-      return findFiles()
+      return findDirectoryConfig();
   })
-})
+
+  ipcMain.handle('read-account-config', () => {
+    return findAccounts();
+  })
+});
 
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -38,15 +42,20 @@ app.whenReady().then(() => {
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.quit();
   }
-})
+});
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
+    createWindow();
   }
-})
+});
+
+// For electron reloader
+try {
+  require('electron-reloader')(module)
+} catch (_) {}

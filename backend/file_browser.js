@@ -1,15 +1,24 @@
-const jsYaml = require("js-yaml")
-const path = require("path")
-const fs = require('fs/promises')
+const jsYaml = require("js-yaml");
+const path = require("path");
+const fs = require('fs/promises');
 
-const findFiles = async () => {
-    const rootPath = path.resolve(__dirname)
+const rootPath = path.resolve(__dirname);
+
+const findDirectoryConfig = async () => {
     const file = await fs.readFile(
         `${rootPath}/../env/directories.yml`
-    )
-    return jsYaml.load(file)
-}
+    );
+    return jsYaml.load(file);
+};
+
+const findAccounts = async () => {
+    const file = await fs.readFile(
+        `${rootPath}/../env/accounts.yml`
+    );
+    return jsYaml.load(file);
+};
 
 module.exports = {
-    findFiles
-}
+   findDirectoryConfig,
+   findAccounts
+};
