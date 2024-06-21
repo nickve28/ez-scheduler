@@ -1,17 +1,17 @@
-const { app, BrowserWindow } = require('electron')
+import { app, BrowserWindow } from 'electron'
 
 function createWindow () {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1920,
+    height: 1080,
     webPreferences: {
       nodeIntegration: true
     }
   })
 
   //load the index.html from a url
-  win.loadURL('http://localhost:3000');
+  win.loadURL('http://localhost:5173');
 
   // Open the DevTools.
   win.webContents.openDevTools()
@@ -39,4 +39,3 @@ app.on('activate', () => {
     createWindow()
   }
 })
-
