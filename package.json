@@ -1,0 +1,15 @@
+{
+  "name": "ez-scheduler",
+  "version": "1.0.0",
+  "description": "Allows posting scheduled images to multiple sources",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nick van Eijk",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^31.0.2"
+  }
+}
