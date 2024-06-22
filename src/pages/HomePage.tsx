@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { Galleria } from "primereact/galleria";
 import {
   AccountConfig,
   DirectoryConfig,
   ImageWithPath,
 } from "../backend_types";
+import { Image } from "primereact/image";
 
 const useDirectoryConfig = () => {
   const [config, setConfig] = useState<DirectoryConfig[] | null>(null);
@@ -15,7 +17,7 @@ const useDirectoryConfig = () => {
 
 const useAccountConfig = () => {
   const [accountConfigs, setAccountConfigs] = useState<AccountConfig[] | null>(
-    null
+    null,
   );
   useEffect(() => {
     window.api.readAccountConfig().then(setAccountConfigs);
@@ -34,22 +36,21 @@ const useImagesWithPaths = () => {
 };
 
 const HomePage = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const directoryConfig = useDirectoryConfig();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const accountConfig = useAccountConfig();
   const imagesWithPaths = useImagesWithPaths();
 
   return (
     <div>
-      <ul>
-        {imagesWithPaths?.map(({ image, imagePath }) => {
-          return (
-            <li key={`${imagePath}`}>
-              <div>{imagePath}</div>
-              <img width={600} height={800} src={image} alt="from system" />
-            </li>
-          );
-        })}
-      </ul>
+      <Galleria
+        value={imagesWithPaths || []}
+        numVisible={5}
+        item={({ imagePath, image }) => (
+          <Image src={image} alt="Pending image" width="600" height="800" />
+        )}
+      />
     </div>
   );
 };
