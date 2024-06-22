@@ -3,7 +3,7 @@ import { Galleria } from "primereact/galleria";
 import {
   AccountConfig,
   DirectoryConfig,
-  ImageWithPath,
+  ImageWithPath
 } from "../backend_types";
 import { Image } from "primereact/image";
 
@@ -17,7 +17,7 @@ const useDirectoryConfig = () => {
 
 const useAccountConfig = () => {
   const [accountConfigs, setAccountConfigs] = useState<AccountConfig[] | null>(
-    null,
+    null
   );
   useEffect(() => {
     window.api.readAccountConfig().then(setAccountConfigs);
@@ -36,9 +36,7 @@ const useImagesWithPaths = () => {
 };
 
 const HomePage = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const directoryConfig = useDirectoryConfig();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const directoryConfig = useDirectoryConfig()
   const accountConfig = useAccountConfig();
   const imagesWithPaths = useImagesWithPaths();
 

@@ -15,24 +15,24 @@ const findAccounts = async () => {
   return jsYaml.load(file);
 };
 
+const readAndEncodeImage = (filePath) => {
+  const imagePromise = fs.readFile(filePath);
+  return imagePromise.then((image) => {
+    const encodedImage = `data:image/jpeg;base64,${image.toString("base64")}`;
+    return {
+      path: filePath,
+      image: encodedImage,
+    };
+  });
+};
+
 const readFromDirectoryConfig = async (directoryConfig) => {
   const { directory_pattern, output_directory, file_pattern } = directoryConfig;
   const pattern = `${directory_pattern}/${file_pattern}`;
   const queuedImages = await glob.glob(pattern);
-  const results = [];
 
   // needs to be a while loop so we can utilize async/await
-  while (queuedImages.length > 0) {
-    const filePath = queuedImages.pop();
-    const image = await fs.readFile(filePath);
-    const encodedImage = `data:image/jpeg;base64,${image.toString("base64")}`;
-    results.push({
-      path: filePath,
-      image: encodedImage,
-    });
-  }
-
-  return results;
+  return Promise.all(queuedImages.map(readAndEncodeImage));
 };
 
 const findImages = async () => {
