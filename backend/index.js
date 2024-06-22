@@ -1,8 +1,12 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require('path');
-const { findDirectoryConfig, findAccounts } = require('./file_browser');
+const { app, BrowserWindow, ipcMain } = require("electron");
+const path = require("path");
+const {
+  findDirectoryConfig,
+  findAccounts,
+  findImages,
+} = require("./file_browser");
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1920,
@@ -10,12 +14,12 @@ function createWindow () {
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: true,
-      preload: path.join(__dirname, 'preload.js')
-    }
+      preload: path.join(__dirname, "preload.js"),
+    },
   });
 
   //load the index.html from a url
-  win.loadURL('http://localhost:3000');
+  win.loadURL("http://localhost:3000");
 
   // Open the DevTools.
   win.webContents.openDevTools();
@@ -27,35 +31,38 @@ function createWindow () {
 app.whenReady().then(() => {
   createWindow();
 
-  ipcMain.handle('read-directory-config', () => {
-      return findDirectoryConfig();
-  })
+  ipcMain.handle("read-directory-config", () => {
+    return findDirectoryConfig();
+  });
 
-  ipcMain.handle('read-account-config', () => {
+  ipcMain.handle("read-account-config", () => {
     return findAccounts();
-  })
-});
+  });
 
+  ipcMain.handle("read-pending-images", () => {
+    return findImages();
+  });
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
-app.on('activate', () => {
+app.on("activate", () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  
+
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
 });
 
 // For electron reloader
-try {
-  require('electron-reloader')(module)
-} catch (_) {}
+// try {
+//   require('electron-reloader')(module)
+// } catch (_) {}

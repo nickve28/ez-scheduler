@@ -4,6 +4,11 @@ export type DirectoryConfig = {
     file_pattern: string;
 }
 
+export type ImageWithPath = {
+    image: string;
+    imagePath: string;
+}
+
 type BaseAccountConfig = {
     version: number;
     type: "Twitter" | "DeviantArt";
