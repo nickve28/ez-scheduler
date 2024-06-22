@@ -2,6 +2,7 @@ const jsYaml = require("js-yaml");
 const path = require("path");
 const fs = require("fs/promises");
 const glob = require("glob");
+const piexif = require("piexifjs")
 
 const rootPath = path.resolve(__dirname);
 
@@ -18,9 +19,19 @@ const findAccounts = async () => {
 const readAndEncodeImage = (filePath) => {
   const imagePromise = fs.readFile(filePath);
   return imagePromise.then((image) => {
-    const encodedImage = `data:image/jpeg;base64,${image.toString("base64")}`;
+    const base64Image = image.toString("base64")
+    const encodedImage = `data:image/jpeg;base64,${base64Image}`;
+
+    const binary = Buffer.from(base64Image, 'base64').toString('binary');
+    const exifObj = piexif.load(binary);
+
+    const subject = exifObj['0th'][piexif.ImageIFD.XPSubject];
+     // Remove null characters and other non-printable characters from the end of the string
+    const caption = subject ? Buffer.from(subject).toString('utf16le').replace(/\0[\s\S]*$/g, '') : null;
+
     return {
       path: filePath,
+      caption: caption,
       image: encodedImage,
     };
   });
@@ -38,6 +49,7 @@ const readFromDirectoryConfig = async (directoryConfig) => {
 const findImages = async () => {
   const directories = await findDirectoryConfig();
   const results = await Promise.all(directories.map(readFromDirectoryConfig));
+  console.log(results)
   return results.reduce((memo, results) => memo.concat(results));
 };
 

@@ -6,7 +6,8 @@ export type DirectoryConfig = {
 
 export type ImageWithPath = {
   image: string;
-  imagePath: string;
+  path: string;
+  caption?: string;
 };
 
 type BaseAccountConfig = {

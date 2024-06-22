@@ -2,13 +2,20 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import "./index.css";
+import "primereact/resources/themes/bootstrap4-light-blue/theme.css"
+import "primereact/resources/primereact.min.css";
+
+import { PrimeReactProvider } from "primereact/api";
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement,
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <PrimeReactProvider value={{ ripple: true }}>
+      <App />
+    </PrimeReactProvider>
   </React.StrictMode>
 );
 

@@ -2,6 +2,7 @@ import React from "react";
 import { PrimeReactProvider } from "primereact/api";
 import HomePage from "./pages/HomePage";
 import { AccountConfig, DirectoryConfig, ImageWithPath } from "./backend_types";
+import { Button } from "primereact/button";
 
 declare global {
   interface Window {
@@ -14,11 +15,8 @@ declare global {
 }
 
 function App() {
-  window.api.readDirectoryConfig().then(console.log);
   return (
-    <PrimeReactProvider>
-      <HomePage />
-    </PrimeReactProvider>
+    <HomePage />
   );
 }
 

@@ -3,50 +3,58 @@ import { Galleria } from "primereact/galleria";
 import {
   AccountConfig,
   DirectoryConfig,
-  ImageWithPath
+  ImageWithPath,
 } from "../backend_types";
 import { Image } from "primereact/image";
+import { Card } from "primereact/card";
+import { useImagesWithPaths } from "./hooks";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Button } from "primereact/button";
 
-const useDirectoryConfig = () => {
-  const [config, setConfig] = useState<DirectoryConfig[] | null>(null);
-  useEffect(() => {
-    window.api.readDirectoryConfig().then(setConfig);
-  }, []);
-  return config;
-};
+const ImageForm: React.FC<{ image: ImageWithPath["image"], initialCaption: string }> = ({ image, initialCaption }) => {
+  const [caption, setCaption] = useState(initialCaption);
 
-const useAccountConfig = () => {
-  const [accountConfigs, setAccountConfigs] = useState<AccountConfig[] | null>(
-    null
+  return (
+    <>
+      <Image src={image} alt="Pending image" width="400" height="600" />
+
+      <Card>
+        <form>
+          <label>Caption</label>
+          <div>
+            <InputTextarea
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+            />
+          </div>
+
+          <Button label="Save" />
+        </form>
+      </Card>
+    </>
   );
-  useEffect(() => {
-    window.api.readAccountConfig().then(setAccountConfigs);
-  }, []);
-  return accountConfigs;
-};
-
-const useImagesWithPaths = () => {
-  const [imagesWithPaths, setImagesWithPaths] = useState<
-    ImageWithPath[] | null
-  >(null);
-  useEffect(() => {
-    window.api.readPendingImages().then(setImagesWithPaths);
-  }, []);
-  return imagesWithPaths;
 };
 
 const HomePage = () => {
-  const directoryConfig = useDirectoryConfig()
-  const accountConfig = useAccountConfig();
   const imagesWithPaths = useImagesWithPaths();
 
   return (
     <div>
       <Galleria
-        value={imagesWithPaths || []}
+        value={imagesWithPaths || [] as ImageWithPath[]}
         numVisible={5}
-        item={({ imagePath, image }) => (
-          <Image src={image} alt="Pending image" width="600" height="800" />
+        item={({ path, image, caption }) => {
+          return (
+            <div className="p-2 grid grid-cols-3 gap-6">
+              <div />
+
+              <ImageForm key={path} image={image} initialCaption={caption} />
+            </div>
+          )
+        }}
+        thumbnail={({ image }) => (
+          <Image src={image} alt="Pending image" width="100" height="150" />
         )}
       />
     </div>
